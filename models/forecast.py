@@ -70,12 +70,43 @@ def plot_in_sample_forecast(results, steps=12):
     plt.tight_layout()
     plt.show()
 
+
+from statsmodels.tsa.vector_ar.vecm import VECM
+
+def estimate_vecm_model(data_path="data/processed/clean_data.csv", lags_diff=2, coint_rank=1):
+    # Charger les données
+    df = pd.read_csv(data_path)
+    df["Date"] = pd.to_datetime(df["Date"])
+    df.set_index("Date", inplace=True)
+
+    # Log-prix (attention : pas de différenciation ici)
+    log_prices = np.log(df[["VIX_Close", "GSPC_Close"]])
+
+    # Estimation du VECM
+    vecm = VECM(log_prices, k_ar_diff=lags_diff, coint_rank=coint_rank, deterministic="co")  # "co" = constante dans le cointegration term
+    vecm_res = vecm.fit()
+
+    print("\n Résumé du modèle VECM :\n")
+    print(vecm_res.summary())
+
+    return vecm_res
+
 if __name__ == "__main__":
-    print("📈 Chargement des données et calcul des log-rendements mensuels...")
-    log_returns = prepare_log_returns()
+    print("TESTS DE STATIONNARITÉ ET COINTÉGRATION")
+    test_stationarity_and_cointegration()
 
-    print("✅ Estimation du modèle VAR...")
-    var_results = estimate_var_model(log_returns, lags=2)
+    MODE = "VECM"  # ⇦ Choisis entre "VAR" ou "VECM"
 
-    print("📊 Affichage des prévisions en échantillon...")
-    plot_in_sample_forecast(var_results)
+    if MODE == "VAR":
+        print("Chargement des données et calcul des log-rendements mensuels...")
+        log_returns = prepare_log_returns()
+
+        print("Estimation du modèle VAR...")
+        var_results = estimate_var_model(log_returns, lags=2)
+
+        print("Affichage des prévisions en échantillon...")
+        plot_in_sample_forecast(var_results)
+
+    elif MODE == "VECM":
+        print("Estimation du modèle VECM...")
+        vecm_results = estimate_vecm_model()
