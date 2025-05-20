@@ -1,0 +1,12 @@
+venv/
+__pycache__/
+*.pyc
+
+# Données
+data/raw/
+data/processed/clean_data.csv
+
+# Cache & OS files
+.DS_Store
+.env
+.ipynb_checkpoints/
