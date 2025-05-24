@@ -5,6 +5,8 @@ from statsmodels.tsa.api import VAR
 import matplotlib.pyplot as plt
 from statsmodels.tsa.stattools import adfuller
 from statsmodels.tsa.vector_ar.vecm import coint_johansen
+from helpers.viz import plot_adf_test, plot_cointegration_test
+
 
 def test_stationarity_and_cointegration():
     # Chemin absolu garanti
