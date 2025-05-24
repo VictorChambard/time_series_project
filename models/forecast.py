@@ -9,20 +9,24 @@ from helpers.viz import plot_adf_test, plot_cointegration_test
 
 
 def test_stationarity_and_cointegration():
-    # Chemin absolu garanti
     project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     data_path = os.path.join(project_root, "data", "processed", "clean_data.csv")
     df = pd.read_csv(data_path)
     df["Date"] = pd.to_datetime(df["Date"])
     df.set_index("Date", inplace=True)
 
-    # Log des prix (pas les rendements)
     log_prices = np.log(df[["VIX_Close", "GSPC_Close"]])
 
     print("TEST ADF (stationnarité des log-prix)")
+    adf_results = {}
     for col in log_prices.columns:
         result = adfuller(log_prices[col])
-        print(f"{col}: p-value = {result[1]:.4f} → {'stationnaire' if result[1] < 0.05 else 'non stationnaire'}")
+        pval = result[1]
+        adf_results[col] = {"p-value": pval}
+        print(f"{col}: p-value = {pval:.4f} → {'stationnaire' if pval < 0.05 else 'non stationnaire'}")
+
+    # 🟩 Affichage graphique des p-valeurs ADF
+    plot_adf_test(adf_results)
 
     print("\n TEST DE JOHANSEN (co-intégration)")
     johansen_result = coint_johansen(log_prices, det_order=0, k_ar_diff=2)
@@ -37,6 +41,10 @@ def test_stationarity_and_cointegration():
             print("→ Rejet de H0 → Il y a au moins", i+1, "relation(s) co-intégrée(s)\n")
         else:
             print("→ On ne rejette pas H0\n")
+
+    # 🟦 Affichage graphique des stats Johansen
+    plot_cointegration_test(trace_stat, crit_values)
+
 
 def prepare_log_returns(data_path: str = "data/processed/clean_data.csv") -> pd.DataFrame:
     df = pd.read_csv(data_path)
@@ -56,8 +64,6 @@ def prepare_log_returns(data_path: str = "data/processed/clean_data.csv") -> pd.
     log_returns = log_monthly.diff().dropna()
 
     return log_returns
-
-test_stationarity_and_cointegration()
 
 def estimate_var_model(log_returns: pd.DataFrame, lags: int = 1):
     model = VAR(log_returns)
