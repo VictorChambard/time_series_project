@@ -1,11 +1,15 @@
 import pandas as pd
 import numpy as np
+import os
 from statsmodels.tsa.api import VAR
 import matplotlib.pyplot as plt
 from statsmodels.tsa.stattools import adfuller
 from statsmodels.tsa.vector_ar.vecm import coint_johansen
 
-def test_stationarity_and_cointegration(data_path="data/processed/clean_data.csv"):
+def test_stationarity_and_cointegration():
+    # Chemin absolu garanti
+    project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    data_path = os.path.join(project_root, "data", "processed", "clean_data.csv")
     df = pd.read_csv(data_path)
     df["Date"] = pd.to_datetime(df["Date"])
     df.set_index("Date", inplace=True)
@@ -59,6 +63,7 @@ def estimate_var_model(log_returns: pd.DataFrame, lags: int = 1):
     print(lag_order.summary())
     optimal_lag = lag_order.selected_orders["aic"]
     results = model.fit(optimal_lag)
+    return results
 
 def plot_in_sample_forecast(results, steps=12):
     forecast = results.fittedvalues

@@ -12,12 +12,30 @@ def clean_multivariate_data(df: pd.DataFrame) -> pd.DataFrame:
     df.sort_values("Date", inplace=True)
     return df
 
+def join_datasets(vix: pd.Series, gspc: pd.Series) -> pd.DataFrame:
+    """
+    Effectue une jointure explicite entre les séries VIX et GSPC sur la colonne Date.
+    """
+    vix_df = vix.reset_index()[["Date", "VIX_Close"]]
+    gspc_df = gspc.reset_index()[["Date", "GSPC_Close"]]
+    return pd.merge(vix_df, gspc_df, on="Date", how="inner")
+
 if __name__ == "__main__":
     from extract import load_config, download_multiple_stocks
 
     config = load_config()
     raw_df = download_multiple_stocks(config)
-    clean_df = clean_multivariate_data(raw_df)
 
+    # Séparation des colonnes pour simuler deux sources
+    vix = df_raw["VIX_Close"]
+    gspc = df_raw["GSPC_Close"]
+
+    # Jointure explicite
+    merged_df = join_datasets(vix, gspc)
+
+    # Nettoyage
+    clean_df = clean_multivariate_data(merged_df)
+
+    print("✅ Aperçu des données nettoyées et jointes :")
     print(clean_df.head())
 
