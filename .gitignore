@@ -1,0 +1,24 @@
+# Ignore Python virtual environments
+.venv/
+venv/
+
+# Byte-compiled / cache files
+__pycache__/
+*.py[cod]
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# Data files (raw and intermediate)
+data/raw/
+data/processed/clean_data.csv
+
+# Environment variables
+.env
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# PyCharm settings
+.idea/
