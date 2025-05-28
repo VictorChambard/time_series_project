@@ -78,3 +78,28 @@ def plot_vecm_forecast(vecm_resultat, pas=12):
     plt.tight_layout()
     st.pyplot(plt.gcf())
     plt.clf()
+
+def plot_vol_vs_pred(real_vol, pred_values, title="Volatilité Réelle vs Prédite"):
+    plt.figure(figsize=(10, 5))
+    plt.plot(real_vol.index, real_vol, label="Volatilité Réelle")
+    plt.plot(pred_values.index, pred_values, label="Prévision VIX", linestyle="--")
+    plt.title(title)
+    plt.xlabel("Date")
+    plt.ylabel("Volatilité")
+    plt.legend()
+    plt.grid(True)
+    st.pyplot(plt.gcf())
+    plt.clf()
+
+def plot_irf_var(resultats_var, pas=12):
+    """
+    Affiche les fonctions de réponse impulsionnelle (IRF) pour un modèle VAR.
+
+    Args:
+        resultats_var : Résultat de l’estimation VAR (objet VARResults).
+        pas (int) : Nombre de périodes à simuler.
+    """
+    irf = resultats_var.irf(pas)  # On génère les IRF sur "pas" périodes
+    fig = irf.plot(orth=False)    # Affichage simple des IRF sans orthogonalisation
+    fig.tight_layout()            # Pour éviter les chevauchements
+    plt.show()                    # Affichage des graphes

@@ -9,6 +9,8 @@ from models.forecast import (
     choisir_modele
 )
 import pandas as pd
+from helpers.viz_irf import plot_irf_var
+
 
 def run_etl() -> pd.DataFrame:
     config = load_config()
@@ -35,6 +37,9 @@ if __name__ == "__main__":
         resultat = estimer_var(rendements)
         print("Affichage des prévisions VAR")
         afficher_forecast_var(resultat)
+        print("Réponse impulsionnelle")
+        plot_irf_var(resultat)
+
 
     elif modele == "VECM":
         print("Estimation du modèle VECM")

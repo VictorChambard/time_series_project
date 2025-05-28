@@ -20,8 +20,12 @@ from helpers.viz import (
     plot_adf_test,
     plot_cointegration_test,
     plot_forecast,
-    plot_vecm_forecast
+    plot_vecm_forecast,
+    plot_vol_vs_pred
+
 )
+from helpers.volatilite import calcul_volatilite
+
 
 st.set_page_config(page_title="Dashboard Volatilité VIX & S&P500", layout="wide")
 
@@ -87,3 +91,20 @@ st.markdown("""
 - Le VECM permet d’exploiter les relations de co-intégration pour des séries non stationnaires.
 - Le modèle est sélectionné automatiquement selon les résultats des tests.
 """)
+
+# === ÉTAPE 6 : Comparaison ===
+
+st.header("6. Comparaison : Volatilité Réelle vs Prévision VIX")
+# Extraction des vraies valeurs de VIX et calcul de sa volatilité
+vix_real = df["VIX_Close"]
+vol_realisee = calcul_volatilite(vix_real)
+
+# Prévision du modèle VAR ou VECM (selon le modèle sélectionné)
+if selected_model == "VAR":
+    pred_vix = resultats_var.fittedvalues["VIX_Close"]
+elif selected_model == "VECM":
+    pred_vix = result_vcm.predict(steps=len(df))[:, 0]  # 0 si VIX est en 1ère colonne
+    pred_vix = pd.Series(pred_vix, index=df.index[-len(pred_vix):])
+
+# Affichage du graphique comparatif
+plot_vol_vs_pred(vol_realisee, pred_vix)
