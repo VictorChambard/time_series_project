@@ -1,15 +1,11 @@
 import matplotlib.pyplot as plt
+import streamlit as st
+import pandas as pd
 
 def plot_adf_test(series_dict):
     """ 
     Affiche les p-valeurs du test ADF pour chaque série temporelle.
-
-    Args:
-        series_dict (dict): Dictionnaire contenant les séries temporelles et 
-        leurs p-valeurs du test ADF.
-     Returns:
-        La figure matplotlib affichant les p-valeurs.
-        """
+    """
     fig, ax = plt.subplots(figsize=(10, 4))
     for name, result in series_dict.items():
         ax.bar(name, result['p-value'], color="green" if result['p-value'] < 0.05 else "red")
@@ -17,17 +13,17 @@ def plot_adf_test(series_dict):
     ax.set_title("P-valeurs du test ADF")
     ax.legend()
     plt.tight_layout()
-    plt.show()
+    st.pyplot(plt.gcf())
+    plt.clf()
 
 def plot_cointegration_test(trace_stats, crit_values):
-
+    """ 
+    Affiche les statistiques de trace Johansen vs. seuils critiques.
+    """
     x = range(len(trace_stats))
     fig, ax = plt.subplots(figsize=(8, 4))
-
-    # Barres des statistiques
     ax.bar(x, trace_stats, color='blue', alpha=0.7)
 
-    # Lignes horizontales pour chaque valeur critique
     for i in x:
         ax.hlines(crit_values[i, 1], xmin=i - 0.4, xmax=i + 0.4, colors='red', linestyles='--')
 
@@ -36,16 +32,12 @@ def plot_cointegration_test(trace_stats, crit_values):
     ax.set_ylabel("Statistique")
     ax.legend(["Valeur critique (5%)"])
     plt.tight_layout()
-    plt.show()
-
+    st.pyplot(plt.gcf())
+    plt.clf()
 
 def plot_forecast(df, title="Prévision des log-rendements"):
-    """
-    Affiche les prévisions sur plusieurs variables.
-
-    Args:
-        df (pd.DataFrame): Résultats de prévision (DataFrame avec les colonnes à afficher)
-        title (str): Titre du graphique.
+    """ 
+    Affiche les prévisions d’un modèle sur plusieurs variables.
     """
     plt.figure(figsize=(10, 5))
     for col in df.columns:
@@ -57,18 +49,12 @@ def plot_forecast(df, title="Prévision des log-rendements"):
     plt.legend()
     plt.grid(True)
     plt.tight_layout()
-    plt.show()
+    st.pyplot(plt.gcf())
+    plt.clf()
 
 def plot_vecm_forecast(vecm_resultat, pas=12):
-    """
+    """ 
     Affiche les prévisions du modèle VECM sur une période donnée.
-
-    Args:
-        vecm_resultat (VECMResults): Résultat estimé du modèle VECM.
-        pas (int): Nombre de périodes à prévoir (par défaut 12).
-
-    Returns:
-        None
     """
     previsions = vecm_resultat.predict(steps=pas)
 
@@ -90,4 +76,5 @@ def plot_vecm_forecast(vecm_resultat, pas=12):
     plt.legend()
     plt.grid(True)
     plt.tight_layout()
-    plt.show()
+    st.pyplot(plt.gcf())
+    plt.clf()

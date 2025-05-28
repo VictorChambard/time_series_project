@@ -27,13 +27,10 @@ if __name__ == "__main__":
     raw_df = download_multiple_stocks(config)
 
     # Séparation des colonnes pour simuler deux sources
-<<<<<<< HEAD
     vix = raw_df["VIX_Close"]
     gspc = raw_df["GSPC_Close"]
-=======
     vix = df_raw["VIX_Close"]
     gspc = df_raw["GSPC_Close"]
->>>>>>> b2e875a6dcadac5bf14b98e0aa255a257228f903
 
     # Jointure explicite
     merged_df = join_datasets(vix, gspc)
@@ -41,10 +38,7 @@ if __name__ == "__main__":
     # Nettoyage
     clean_df = clean_multivariate_data(merged_df)
 
-<<<<<<< HEAD
     print(" Aperçu des données nettoyées et jointes :")
-=======
     print("✅ Aperçu des données nettoyées et jointes :")
->>>>>>> b2e875a6dcadac5bf14b98e0aa255a257228f903
     print(clean_df.head())
 

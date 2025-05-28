@@ -1,7 +1,6 @@
 from etl.extract import load_config, download_multiple_stocks
 from etl.transform import clean_multivariate_data
 from etl.load import save_to_csv
-<<<<<<< HEAD
 from models.forecast import (
     preparer_rendements_log_mensuels,
     estimer_var,
@@ -9,8 +8,6 @@ from models.forecast import (
     estimer_vecm,
     choisir_modele
 )
-=======
->>>>>>> b2e875a6dcadac5bf14b98e0aa255a257228f903
 import pandas as pd
 
 def run_etl() -> pd.DataFrame:
@@ -22,7 +19,7 @@ def run_etl() -> pd.DataFrame:
     return clean_df
 
 if __name__ == "__main__":
-<<<<<<< HEAD
+
     print(" Lancement du pipeline ETL")
     cleaned_df = run_etl()
     print(" ETL terminé avec succès.")
@@ -42,9 +39,3 @@ if __name__ == "__main__":
     elif modele == "VECM":
         print("Estimation du modèle VECM")
         resultat_vecm = estimer_vecm()
-=======
-    print("🚀 Lancement du pipeline ETL...")
-    cleaned_df = run_etl()
-    print("✅ ETL terminé avec succès.")
-    print(cleaned_df.head())
->>>>>>> b2e875a6dcadac5bf14b98e0aa255a257228f903
