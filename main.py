@@ -39,8 +39,11 @@ if __name__ == "__main__":
     elif modele == "VECM":
         print("Estimation du modèle VECM")
         resultat_vecm = estimer_vecm()
+<<<<<<< HEAD
     
     import os
 
     # Lancement du dashboard Streamlit
     os.system("streamlit run app/dashboard.py")
+=======
+>>>>>>> c293a3bb5aab81588ee1ae615e6f0a69263a087b
