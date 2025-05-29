@@ -1,3 +1,6 @@
+import sys
+import os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../../')))
 import pandas as pd
 from etl.extract import load_config, download_multiple_stocks
 from etl.transform import clean_multivariate_data

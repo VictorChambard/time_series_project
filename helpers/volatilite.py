@@ -22,7 +22,7 @@ def calcul_log_rendements(prix):
         else:
             rendements.append(0)
 
-    rendements = [pd.NA] + rendements  # le premier rendement n'est pas défini
+    rendements = [pd.NA] + rendements  
     return pd.Series(rendements, index=prix.index)
 
 

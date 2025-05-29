@@ -105,30 +105,6 @@ def estimer_vecm(lags_diff=2, coint_rank=1):
     print(resultat.summary())
     return resultat
 
-
-if __name__ == "__main__":
-    print("Tests de stationnarité et co-intégration")
-    tester_stationnarite_et_coint()
-
-    MODELE = "VECM"
-
-    if MODELE == "VAR":
-        print("Préparation des log-rendements mensuels")
-        rendements = preparer_rendements_log_mensuels()
-
-        print("Estimation du modèle VAR")
-        resultat_var = estimer_var(rendements)
-
-        print("Prévision à partir du modèle VAR")
-        afficher_forecast_var(resultat_var)
-
-    elif MODELE == "VECM":
-        print("Estimation du modèle VECM")
-        resultat_vecm = estimer_vecm()
-
-        print("Prévision à partir du modèle VECM")
-        plot_vecm_forecast(resultat_vecm)
-
 def choisir_modele(): 
     """
     Analyse des tests de stationnarité et de co-intégration pour choisir le modèle approprié.
@@ -165,3 +141,28 @@ def choisir_modele():
         return "VECM"
     else:
         return "VAR"
+
+
+if __name__ == "__main__":
+    print("Tests de stationnarité et co-intégration")
+    tester_stationnarite_et_coint()
+
+    MODELE = "VECM"
+
+    if MODELE == "VAR":
+        print("Préparation des log-rendements mensuels")
+        rendements = preparer_rendements_log_mensuels()
+
+        print("Estimation du modèle VAR")
+        resultat_var = estimer_var(rendements)
+
+        print("Prévision à partir du modèle VAR")
+        afficher_forecast_var(resultat_var)
+
+    elif MODELE == "VECM":
+        print("Estimation du modèle VECM")
+        resultat_vecm = estimer_vecm()
+
+        print("Prévision à partir du modèle VECM")
+        plot_vecm_forecast(resultat_vecm)
+

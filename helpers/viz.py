@@ -92,15 +92,4 @@ def plot_vol_vs_pred(real_vol, pred):
     ax.legend()
     st.pyplot(fig)
 
-def plot_irf_var(resultats_var, pas=12):
-    """
-    Affiche les fonctions de réponse impulsionnelle (IRF) pour un modèle VAR.
-
-    Args:
-        resultats_var : Résultat de l’estimation VAR (objet VARResults).
-        pas (int) : Nombre de périodes à simuler.
-    """
-    irf = resultats_var.irf(pas)  # On génère les IRF sur "pas" périodes
-    fig = irf.plot(orth=False)    # Affichage simple des IRF sans orthogonalisation
-    fig.tight_layout()            # Pour éviter les chevauchements
-    plt.show()                    # Affichage des graphes
+                  
