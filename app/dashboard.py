@@ -71,7 +71,25 @@ else:
 valid_cols = [col for col in cols if col in df_to_plot.columns]
 
 if valid_cols:
-    st.line_chart(df_to_plot[valid_cols])
+    if "VIX_Close" in valid_cols and "GSPC_Close" in valid_cols:
+        # Graphique double axe
+        fig, ax1 = plt.subplots(figsize=(10, 4))
+
+        ax1.plot(df_to_plot.index, df_to_plot["GSPC_Close"], color='tab:blue', label="S&P500")
+        ax1.set_ylabel("S&P500", color='tab:blue')
+        ax1.tick_params(axis='y', labelcolor='tab:blue')
+
+        ax2 = ax1.twinx()
+        ax2.plot(df_to_plot.index, df_to_plot["VIX_Close"], color='tab:red', label="VIX")
+        ax2.set_ylabel("VIX", color='tab:red')
+        ax2.tick_params(axis='y', labelcolor='tab:red')
+
+        ax1.set_title("S&P500 vs VIX (double axe)")
+        fig.tight_layout()
+        st.pyplot(fig)
+
+    else:
+        st.line_chart(df_to_plot[valid_cols])
 else:
     st.warning("Aucune des colonnes sélectionnées n'est valide.")
 
@@ -147,7 +165,21 @@ La crise sanitaire de 2020 a provoqué une volatilité extrême.
 Nous analysons ici comment le modèle se comporte sur cette période critique.
 """)
 df_zoom = df[["VIX_Close", "GSPC_Close"]].loc["2020":"2021"]
-st.line_chart(df_zoom)
+
+fig, ax1 = plt.subplots(figsize=(10, 4))
+
+ax1.plot(df_zoom.index, df_zoom["GSPC_Close"], color='tab:blue', label="S&P500")
+ax1.set_ylabel("S&P500", color='tab:blue')
+ax1.tick_params(axis='y', labelcolor='tab:blue')
+
+ax2 = ax1.twinx()
+ax2.plot(df_zoom.index, df_zoom["VIX_Close"], color='tab:red', label="VIX")
+ax2.set_ylabel("VIX", color='tab:red')
+ax2.tick_params(axis='y', labelcolor='tab:red')
+
+ax1.set_title("S&P500 vs VIX pendant la crise COVID (2020–2021)")
+fig.tight_layout()
+st.pyplot(fig)
 
 # === ÉTAPE 8 : Fonctions de réponse impulsionnelle ===
 
