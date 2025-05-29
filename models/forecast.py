@@ -77,7 +77,12 @@ def preparer_rendements_log_mensuels():
 
 
 def estimer_var(rendements, max_lags=12):
-    modele = VAR(rendements)
+    print("Vérification des types :\n", rendements.dtypes)
+    print("Valeurs manquantes :\n", rendements.isna().sum())
+
+    rendements_clean = rendements.dropna().astype(np.float64)
+
+    modele = VAR(rendements_clean)
     selection = modele.select_order(maxlags=max_lags)
     print(selection.summary())
 

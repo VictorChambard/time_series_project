@@ -221,4 +221,11 @@ Projet réalisé par le groupe N dans le cadre du cours de Python de Fabrice Gal
 **Référence académique utilisée :**  
 - Zhang, B., Hu, Y., & Ji, Q. (2020). Financial markets under the global pandemic of COVID-19. *Finance Research Letters*, 36, 101528.
 - Becker, R., Clements, A. E., & McClelland, A. (2022). *Forecasting Realized Volatility and VIX: A comparison of VAR and Machine Learning Models*.
+- Datacamp
+- TD du cours
+- lien pour les packages : 
+- https://www.statsmodels.org/stable/vector_ar.html
+- https://www.statsmodels.org/stable/generated/statsmodels.tsa.stattools.adfuller.html
+- https://docs.streamlit.io/
+- https://www.statsmodels.org/stable/index.html
 """)

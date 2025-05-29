@@ -1,3 +1,5 @@
+# lien du github du projet : https://github.com/VictorChambard/time_series_project.git
+
 from etl.extract import load_config, download_multiple_stocks
 from etl.transform import clean_multivariate_data
 from etl.load import save_to_csv
