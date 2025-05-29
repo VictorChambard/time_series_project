@@ -61,7 +61,7 @@ def plot_vecm_forecast(vecm_resultat, pas=12):
     index_futur = pd.date_range(
         start=vecm_resultat.model.data.row_labels[-1],
         periods=pas + 1,
-        freq="M"
+        freq="ME"
     )[1:]
 
     df_previsions = pd.DataFrame(previsions, columns=vecm_resultat.names, index=index_futur)
@@ -79,17 +79,18 @@ def plot_vecm_forecast(vecm_resultat, pas=12):
     st.pyplot(plt.gcf())
     plt.clf()
 
-def plot_vol_vs_pred(real_vol, pred_values, title="Volatilité Réelle vs Prédite"):
-    plt.figure(figsize=(10, 5))
-    plt.plot(real_vol.index, real_vol, label="Volatilité Réelle")
-    plt.plot(pred_values.index, pred_values, label="Prévision VIX", linestyle="--")
-    plt.title(title)
-    plt.xlabel("Date")
-    plt.ylabel("Volatilité")
-    plt.legend()
-    plt.grid(True)
-    st.pyplot(plt.gcf())
-    plt.clf()
+def plot_vol_vs_pred(real_vol, pred):
+    import matplotlib.pyplot as plt
+    import pandas as pd
+    df_plot = pd.concat([real_vol, pred], axis=1).dropna()
+    real_vol_clean = df_plot.iloc[:, 0]
+    pred_clean = df_plot.iloc[:, 1]
+    fig, ax = plt.subplots(figsize=(10, 4))
+    ax.plot(real_vol_clean.index, real_vol_clean, label="Volatilité Réelle")
+    ax.plot(pred_clean.index, pred_clean, label="Prévision VIX")
+    ax.set_title("Volatilité Réelle vs Prévision VIX")
+    ax.legend()
+    st.pyplot(fig)
 
 def plot_irf_var(resultats_var, pas=12):
     """

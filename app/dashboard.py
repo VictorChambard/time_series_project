@@ -1,10 +1,11 @@
 import sys
 import os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
 import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
 
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 # Imports internes
 from etl.extract import load_config, download_multiple_stocks
@@ -30,6 +31,8 @@ from helpers.viz_irf import plot_irf_var
 
 
 st.set_page_config(page_title="Dashboard Volatilité VIX & S&P500", layout="wide")
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+selected_model = st.selectbox("Modèle sélectionné :", ["VECM", "VAR"])
 
 
 # === TITRE ===
@@ -54,7 +57,8 @@ config = load_config()
 df_raw = download_multiple_stocks(config)
 df = clean_multivariate_data(df_raw)
 st.dataframe(df.head())
-
+df.index = pd.DatetimeIndex(df["Date"])
+df.index.freq = pd.infer_freq(df.index)
 # === ÉTAPE 2 : Visualisation des séries temporelles ===
 st.header("2. Visualisation des séries temporelles")
 cols = st.multiselect("Colonnes à afficher :", df.columns.tolist(), default=df.columns.tolist())
@@ -90,11 +94,15 @@ if st.button("Lancer la prévision"):
     if selected_model == "VAR":
         rendements = preparer_rendements_log_mensuels()
         resultats_var = estimer_var(rendements)
+        st.session_state.resultats_var = resultats_var  # 🔁 on le stocke
+        st.session_state.selected_model = "VAR"
         st.subheader("Prévision avec modèle VAR")
         plot_forecast(resultats_var.fittedvalues, title="Prévision VAR en échantillon")
 
     elif selected_model == "VECM":
         resultat_vecm = estimer_vecm()
+        st.session_state.resultat_vecm = resultat_vecm  # 🔁 on le stocke aussi
+        st.session_state.selected_model = "VECM"
         st.subheader("Prévision avec modèle VECM")
         plot_vecm_forecast(resultat_vecm)
 
@@ -110,20 +118,27 @@ st.markdown("""
 # === ÉTAPE 6 : Comparaison avec la volatilité réalisée ===
 
 st.header("6. Comparaison : Volatilité Réelle vs Prévision VIX")
-# Extraction des vraies valeurs de VIX et calcul de sa volatilité
 vix_real = df["VIX_Close"]
 vol_realisee = calcul_volatilite(vix_real)
 
-# Prévision du modèle VAR ou VECM (selon le modèle sélectionné)
+selected_model = st.session_state.get("selected_model", None)
+
 if selected_model == "VAR":
-    pred_vix = resultats_var.fittedvalues["VIX_Close"]
+    resultats_var = st.session_state.get("resultats_var", None)
+    if resultats_var is not None:
+        pred_vix = resultats_var.fittedvalues["VIX_Close"]
+        plot_vol_vs_pred(vol_realisee, pred_vix)
+    else:
+        st.warning("Le modèle VAR n'a pas encore été estimé.")
 elif selected_model == "VECM":
-    pred_vix = result_vcm.predict(steps=len(df))[:, 0]  # 0 si VIX est en 1ère colonne
-    pred_vix = pd.Series(pred_vix, index=df.index[-len(pred_vix):])
-
-# Affichage du graphique comparatif
-plot_vol_vs_pred(vol_realisee, pred_vix)
-
+    resultat_vecm = st.session_state.get("resultat_vecm", None)
+    if resultat_vecm is not None:
+        pred_vix = resultat_vecm.predict(steps=len(df))[:, 0]
+        pred_vix = pd.Series(pred_vix, index=df.index[-len(pred_vix):])
+        plot_vol_vs_pred(vol_realisee, pred_vix)
+    else:
+        st.warning("Le modèle VECM n'a pas encore été estimé.")
+        
 # === ÉTAPE 7 : Crise Covid ===
 
 st.header("7. Focus sur la période COVID (2020-2021)")
