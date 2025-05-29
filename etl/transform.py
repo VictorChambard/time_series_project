@@ -29,8 +29,7 @@ if __name__ == "__main__":
     # Séparation des colonnes pour simuler deux sources
     vix = raw_df["VIX_Close"]
     gspc = raw_df["GSPC_Close"]
-    vix = df_raw["VIX_Close"]
-    gspc = df_raw["GSPC_Close"]
+
 
     # Jointure explicite
     merged_df = join_datasets(vix, gspc)
@@ -39,6 +38,6 @@ if __name__ == "__main__":
     clean_df = clean_multivariate_data(merged_df)
 
     print(" Aperçu des données nettoyées et jointes :")
-    print("✅ Aperçu des données nettoyées et jointes :")
+    print("Aperçu des données nettoyées et jointes :")
     print(clean_df.head())
 

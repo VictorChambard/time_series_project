@@ -1,4 +1,5 @@
 import matplotlib.pyplot as plt
+import streamlit as st
 
 def plot_irf_var(resultats_var, horizon=10):
     """
@@ -9,7 +10,7 @@ def plot_irf_var(resultats_var, horizon=10):
         horizon (int) : nombre de périodes pour l'IRF
     """
     irf = resultats_var.irf(horizon)
-    fig = irf.plot(orth=True)  # Sans orthogonalisation → affichage simple
+    fig = irf.plot(orth=True)
     fig.suptitle("Réponses impulsionnelles (IRF) - VAR")
     plt.tight_layout()
-    plt.show()
+    st.pyplot(fig)

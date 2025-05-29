@@ -1,3 +1,6 @@
+import sys
+import os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../../')))
 import pandas as pd
 from statsmodels.tsa.api import VAR
 from statsmodels.tsa.vector_ar.vecm import VECMResults
